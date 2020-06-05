@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>京东网站轮播</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <div class="box">
+        <ul class="img">
+            <li>
+                <a href="#"><img src="images/1.jpg"></a>
+            </li>
+            <li>
+                <a href="#"><img src="images/2.jpg"></a>
+            </li>
+            <li>
+                <a href="#"><img src="images/3.jpg"></a>
+            </li>
+            <li>
+                <a href="#"><img src="images/4.jpg"></a>
+            </li>
+            <li>
+                <a href="#"><img src="images/5.jpg"></a>
+            </li>
+            <li>
+                <a href="#"><img src="images/6.jpg"></a>
+            </li>
+            <li>
+                <a href="#"><img src="images/7.jpg"></a>
+            </li>
+            <li>
+                <a href="#"><img src="images/8.jpg"></a>
+            </li>
+        </ul>
+        <ul class="circle"></ul>
+        <span class="left"> &lt; </span>
+        <span class="right"> &gt; </span>
+    </div>
+</body>
+<script src="jquery-3.5.1.js"></script>
+<script>
+    $(function() {
+        var i = 0;
+        var clone = $(".img li").first().clone();
+        $(".img").append(clone);
+        var len = $(".img li").length;
+        for (i = 0; i < len - 1; i++) {
+            $(".circle").append("<li></li>");
+        }
+        $(".circle li").first().addClass("on");
+
+        //鼠标点击圆圈
+        $(".circle li").click(function() {
+            var index = $(this).index();
+            i = index;
+            $(".img").stop().animate({
+                left: -index * 1180
+            }, 1000);
+            $(this).addClass("on").siblings().removeClass("on");
+        })
+
+        //通过计时器，自动轮播
+        var timer = setInterval(function() {
+            i++;
+            move();
+        }, 2000);
+
+        //鼠标划入停止轮播，移出继续轮播
+        $(".box").hover(function() {
+            clearInterval(timer);
+        }, function() {
+            timer = setInterval(move, 2000);
+        })
+
+        $(".left").click(function() {
+            i--;
+            move();
+        })
+        $(".right").click(function() {
+            i++;
+            move();
+        })
+
+        function move() {
+            if (i == len) {
+                $(".img").css({
+                    left: 0
+                });
+                i = 1;
+            }
+            if (i == -1) {
+                $(".img").css({
+                    left: -(len - 1) * 1180
+                });
+                i = len - 2;
+            }
+
+            $(".img").stop().animate({
+                left: -i * 1180
+            }, 1000);
+
+            if (i == len - 1) {
+                $(".circle li").eq(0).addClass("on").siblings().removeClass("on");
+            } else {
+                $(".circle li").eq(i).addClass("on").siblings().removeClass("on");
+            }
+        }
+    })
+</script>
+
+</html>
